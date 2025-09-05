@@ -1,1 +1,5 @@
 # desarrollo_web_Andres_Faundez
+Hay comentarios dentro de los html y js que me servían como recordatorio para arreglar errores y fallas que tuve durante el desarrollo que olvidé borrar. 
+En la parte de js tuve que hacer un archivo separado para lo que pedía el listado pues no me funcionaba si lo tenía en el main y no entendí nunca por qué. 
+En esta misma sección se que no es la forma más eficiente la que utilicé para mostrar el detalle de la info sobre los avisos, pero como no estoy muy familiarizado con el lenguaje fui por esa opción más sencilla. En agregar casi todos los div con clase e id los coloqué de forma similar a lo que vimos en los aux pero no entendía bien el por qué, una vez empecé a trabajar en el js empecé a entender como y por qué eran necesarios. 
+Dentro del js, en particular en el main, no estoy seguro si lo que presenté está bien hecho, más que en funcionamiento en terminos de orden, como pelié mucho con la tarea muchas funciones quedaron desordenadas dentro del main más cumplen con lo que pide el enunciado.
