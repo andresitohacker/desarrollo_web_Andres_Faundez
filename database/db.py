@@ -1,6 +1,6 @@
 from models import * 
 
-def get_regions():
+def get_regiones():
     session = SessionLocal()
     region = session.query(Region).all()
     session.close()
@@ -21,6 +21,12 @@ def get_avisos(n, offset=0):
 def get_avisos_por_pagina(pagina: int):
     offset = (pagina - 1) * 5
     return get_avisos(5, offset)
+
+def get_total_avisos():
+    session = SessionLocal
+    total = session.query(AvisoAdopcion).count()
+    session.close()
+    return total
 
 def get_aviso_por_id(aviso_id: int):
     session = SessionLocal()
