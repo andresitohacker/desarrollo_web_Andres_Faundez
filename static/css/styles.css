@@ -1,0 +1,166 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+h1 {
+    text-align: start;
+    color: #000000;
+    margin: 20px 0;
+
+
+}
+header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+nav li {
+    margin: 0 10px; 
+}
+
+nav a {
+    text-decoration: none;
+    color: #0082fc;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+nav a:hover {
+    color: #005bb5;
+}
+
+h2 {
+    text-align: center;
+    color: #29e0f8;
+    margin: 30px ;
+}
+
+table {
+    display: block;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: lightblue;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #9bf5f5;
+}
+
+tbody tr:hover {
+    background-color: #acff8b;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px; 
+    background-color: #d0ffa4;
+    padding: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); 
+}
+
+.formulario {
+    font-family: Arial, sans-serif;
+    background-color: #c3ffd5;
+    text-align: left;
+    padding: 20px;
+}
+
+.grupo-input {
+    margin-bottom: 15px;
+}
+.grupo-input label {
+    color: #2141f7;
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.grupo-input input {
+    width: 80%;
+    padding: 5px;
+    box-sizing: border-box;    
+}
+
+.grupo-input select {
+    width: 80%;
+    padding: 5px;
+    box-sizing: border-box;    
+}
+
+.grupo-input textarea {
+    width: 80%;
+    height: 100px;
+    padding: 5px;
+    box-sizing: border-box;    
+}
+
+#agregar-foto {
+    background-color: #0f805a;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}
+#enviar {
+    background-color: #09ff00;
+    color: rgb(3, 104, 20);
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 26px;
+}
+
+#confirmacion {
+    color: rgb(41, 73, 255);
+    font-weight: bold;
+    margin-top: 20px;
+}
+.botones {
+    justify-content: center;    
+    margin-top: 20px;
+}
+
+#si {
+    color: green;
+}
+
+#no {
+    color: red;
+}
+ 
+#botonvolver {
+    text-align: center;
+    margin-top: 20px;
+    color: blue;
+}
+a.volver {
+    text-decoration: none;
+    color: #0082fc;
+    font-weight: bold;
+    margin-top: 100px;
+}
+a.volver:hover {
+    color: #005bb5;
+}
