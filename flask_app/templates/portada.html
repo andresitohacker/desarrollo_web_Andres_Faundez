@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adopciones</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <main>
+    <header>
+        <h1>Bienvenido a la Página de Adopciones FCFM</h1>
+        <nav>
+        <ul>
+            <li><a href="{{ url_for('agregar_aviso') }}">Agregar aviso de adopción</a></li>
+            <li><a href="{{ url_for('listado') }}">Ver listado de adopciones</a></li>
+            <li><a href="estadisticas.html">Estadísticas</a></li>
+        </ul>
+        </nav>
+    </header>
+  </main>
+ <h2>Avisos de Adopción recientes</h2>
+    <table> 
+        <thead>
+            <tr>
+                <th>Fecha Ingreso</th>
+                <th>Comuna</th>
+                <th>Sector</th>
+                <th>Cantidad Tipo Edad</th>
+                <th>Foto</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for aviso in avisos %}
+            <tr>
+                <td>{{ aviso.fecha_publicacion }}</td>
+                <td>{{ aviso.comuna }}</td>
+                <td>{{ aviso.sector or 'Desconocido'}}</td>
+                <td>{{ aviso.cantidad }} {{ aviso.tipo }} {{ aviso.edad }}</td>
+                <td>
+                    {% if aviso.fotos %}
+                    <img src="{{ aviso.fotos[0] }}" alt="Foto de {{ aviso.tipo }}" width="100">
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+    </table>
+</body>
+</html>

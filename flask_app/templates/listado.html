@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Listado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Listado de avisos de adopciones</h1>
+    </header>
+    <main>
+        <table id="listado">
+            <thead>
+                <tr>
+                    <th>Fecha Publicación</th>
+                    <th>Fecha Entrega</th>
+                    <th>Comuna</th>
+                    <th>Sector</th>
+                    <th>Cantidad Tipo Edad</th>
+                    <th>Nombre Contacto</th>
+                    <th>Total Fotos</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for aviso in avisos %}
+                <tr class="clickeable" onclick="window.location.href='{{ url_for('detalle_aviso', aviso_id=aviso.id) }}'">
+                    <td>{{ aviso.fecha_ingreso }}</td>
+                    <td>{{ aviso.fecha_entrega }}</td>
+                    <td>{{ aviso.comuna.nombre }}</td>
+                    <td>{{ aviso.sector or 'No especificado' }}</td>
+                    <td>
+                        {{ aviso.cantidad }} {{ aviso.tipo }}<br>
+                        {{ aviso.edad }} {% if aviso.unidad_medida == 'a' %}años{% else %}meses{% endif %}
+                    </td>
+                    <td>{{ aviso.nombre }}</td>
+                    <td>
+                        {% if aviso.fotos and aviso.fotos[0] %}
+                        <img src="{{ aviso.fotos[0].ruta_archivo }}" alt="Foto mascota" width="100" height="70">
+                        {%endif%}
+                    </td>s
+
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+       <!-- logica de paginas-->
+
+       {% if total_paginas > 1 %}
+        <div class="pagination">
+            {% if pagina_actual > 1 %}
+                <a href="{{ url_for('listado', pagina=pagina_actual - 1) }}">&laquo; Anterior</a>
+            {% endif %}
+            <span>Página {{ pagina_actual }} de {{ total_paginas }}</span>
+            {% if pagina_actual < total_paginas %}
+                <a href="{{ url_for('listado', pagina=pagina_actual + 1) }}">Siguiente &raquo;</a>
+            {% endif %}
+        </div>
+        {% endif %}
+        
+    </main>
+    <footer>
+        <div class ="boton">
+            <a href="{{url_for('portada')}}" class = "volver">Volver al inicio</a>
+        </div>
+    </footer>
+    <script src="{{ url_for('static', filename='js/listado.js') }}"></script>
+</body>
+</html>

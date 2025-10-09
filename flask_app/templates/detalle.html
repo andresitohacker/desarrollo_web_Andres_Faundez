@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>detalle_aviso</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+     <header>
+        <h1>Detalle del Aviso de Adopción</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('portada') }}">Inicio</a></li>
+                <li><a href="{{ url_for('listado') }}">Volver al Listado</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class=">container">
+        <section class="detalle-aviso">
+            <h2>Información del Aviso</h2>
+            <p><strong>Fecha de Publicación:</strong> {{ aviso.fecha_ingreso }}</p>
+            <p><strong>Fecha de Entrega:</strong> {{ aviso.fecha_entrega }}</p>
+            <p><strong>Comuna:</strong> {{ aviso.comuna.nombre }}</p>
+            <p><strong>Sector:</strong> {{ aviso.sector or 'No especificado' }}</p>
+            <p><strong>Cantidad y Tipo:</strong> {{ aviso.cantidad }} {{ aviso.tipo }}</p>
+            <p><strong>Edad:</strong> {{ aviso.edad }} {% if aviso.unidad_medida == 'a' %}años{% else %}meses{% endif %}</p>
+            <p><strong>Descripción:</strong> {{ aviso.descripcion or 'No especificada' }}</p>
+        </section>
+
+        <section class="contacto-aviso">
+            <h2>Información de Contacto</h2>
+            <p><strong>Nombre:</strong> {{ aviso.nombre }}</p>
+            <p><strong>Email:</strong> {{ aviso.email }}</p>
+            <p><strong>Teléfono:</strong> {{ aviso.celular }}</p>
+            <p><strong>Contactar por:</strong> {{ aviso.contactar_por or 'No especificado' }}</p>
+        </section>
+
+        <section class="fotos-aviso">
+            <h2>Fotos de la Mascota</h2>
+            {% if aviso.fotos %}
+                {% for foto in aviso.fotos %}
+                    <img src="{{ foto.ruta_archivo }}" alt="Foto de la mascota" width="200">
+                {% endfor %}
+            {% endif %}
+        </section>
