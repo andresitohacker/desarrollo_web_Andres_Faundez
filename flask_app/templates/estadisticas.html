@@ -4,25 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Estadísticas</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-    <header>
+    <main class = "estadisticas-container">
         <h1>Estadísticas</h1>
-    </header>
-    <main>
-        <h2>Avisos por día</h2>
-        <img src="../imagenes/avisos_por_dia.png" alt="Grafico de lineas">
-
-        <h2>Tipo de mascota</h2>
-        <img src="../imagenes/tipo_de_mascota.png" alt="Grafico Torta">
-
-        <h2>Mensual</h2>
-        <img src="../imagenes/avisos_por_mes.png" alt="Grafico de barras">
-
+    
+        <figure class = "highcharts-figure">
+            <div id = "container" style = "height: 360px;"></div>
+            <p class = "highcharts-description">
+                Avisos agregados por día.
+            </p>
+        </figure>
+        <figure class = "highcharts-figure">
+            <div id = "container" style = "height: 360px;"></div>
+            <p class = "highcharts-description">
+                Proporción de avisos por tipo de mascota.
+            </p>
+        </figure>
+        <figure class = "highcharts-figure">
+            <div id = "container" style = "height: 360px;"></div>
+            <p class = "highcharts-description">
+                Avisos por mes.
+            </p>
+        </figure>
+        <div class ="boton">
+            <a href="{{ url_for('portada') }}" class = "volver">Volver al inicio</a>
+        </div>
     </main>
-    <div class ="boton">
-        <a href="portada.html" class = "volver">Volver al inicio</a>
-    </div>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src = "{{ url_for('static', filename='js/stats.js') }}"></script>
 </body>
 </html>
