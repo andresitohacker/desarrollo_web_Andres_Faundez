@@ -39,7 +39,7 @@
                         {% if aviso.fotos and aviso.fotos[0] %}
                         <img src="{{ aviso.fotos[0].ruta_archivo }}" alt="Foto mascota" width="100" height="70">
                         {%endif%}
-                    </td>s
+                    </td>
 
                 </tr>
                 {% endfor %}
@@ -66,6 +66,5 @@
             <a href="{{url_for('portada')}}" class = "volver">Volver al inicio</a>
         </div>
     </footer>
-    <script src="{{ url_for('static', filename='js/listado.js') }}"></script>
 </body>
 </html>

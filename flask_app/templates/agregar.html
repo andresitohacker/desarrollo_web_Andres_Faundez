@@ -16,15 +16,16 @@
             </div>
         {% endif %}
 
-        <form class="formulario" method="POST" action="{{ url_for('agregar_aviso') }}">
+        <form class="formulario" method="POST" action="{{ url_for('agregar_aviso') }}" enctype="multipart/form-data">
             <h2>Region</h2>
             <div id = "region-select" class="grupo-input">
                 <label for = "region">Región</label>
                 <select id  = "region" name = "region"  required>
+                    <option value="">Seleccione una región</option>
                     {% for region in regiones %}
                     <option value="{{ region.id }}">{{ region.nombre }}</option>
                     {% endfor %}
-                    <option value="">Seleccione una región</option>
+                    
                 </select>
                 
             </div>
@@ -32,6 +33,10 @@
                     <label for="comuna">Comuna</label>
                     <select id="comuna" name="comuna"  required>
                         <option value="">Seleccione una comuna</option>
+                        {% for comuna in comunas %}
+                        <option value="{{ comuna.id }}">{{ comuna.nombre }}</option>
+                        {% endfor %}
+                        
                     </select>
             </div>
             <div class="grupo-input">
@@ -52,23 +57,27 @@
                 <label for="telefono">Teléfono</label>
                 <input id="telefono" name="celular" type="tel" required>
             </div>
-            <div id="contactar_por-input" class="grupo-input">
-                <label for="contactar_por">contactar por</label>
-                <select id="contactar_por" name="contactar_por">
-                    <option value ="">Seleccione una opción</option>
-                    <option value="Instagram"{}>Instagram</option>
-                    <option value="WhatsApp">WhatsApp</option>
-                    <option value="Telegram">Telegram</option>
-                    <option value="X">X</option>
-                    <option value="TikTok">TikTok</option>
-                    <option value="Otra">Otra</option>
-                </select>
+            <div id="contactos" class="grupo-input">
+                <div class="contacto-item">
+                    <label>contactar por</label>
+                    <select name="contactar_por[]" class ="contactar_por">
+                        <option value ="">Seleccione una opción</option>
+                        <option value="Instagram">Instagram</option>
+                        <option value="WhatsApp">WhatsApp</option>
+                        <option value="Telegram">Telegram</option>  
+                        <option value="X">X</option>
+                        <option value="TikTok">TikTok</option>
+                        <option value="Otra">Otra</option>
+                    </select>
+                    <div class="info-contacto" style="display:none;">
+                        <label>Id contacto o URL</label>
+                        <input name="id-contacto[]" type="text" minlength="4" maxlength="50" >
+                    </div> 
+                </div>
             </div>
-            <!--Recordar meter en el main la cosa para que esta linea se haga visible al seleccionar una opcion arriba-->
-            <div id = "info-contacto" class="grupo-input" style="display:none;">
-                <label for="id-contacto">Id contacto o URL</label>
-                <input id="id-contacto" name="id-contacto" type="text" minlength="5" maxlength="50" >
-            </div>
+            <button type="button" id="agregar-contacto">Agregar otro contacto</button>
+         <!--Recordar meter en el main la cosa para que esta linea se haga visible al seleccionar una opcion arriba-->
+            
             
             <h2>¿Qué mascota ofrece en adopción?</h2>
             <div id = "tipo-input" class = "grupo-input">
@@ -106,19 +115,19 @@
             <div id = "foto-input" class = "grupo-input">
                 <label for = "foto">Foto(s) (1 a 5)</label>
                 <div id = "fotos">
-                    <input id = "foto" name = "foto" type = "file" accept="image/*" required>
+                    <input id="foto" name="foto" type="file" accept="image/*" required>
                 </div>
                 <button type="button" id="agregar-foto">Agregar otra foto</button>              <!--Falta hacer que no se puedan agregar mas de 5 fotos-->
             </div>
 
             <div class="boton">
-                <button type="submit" id="enviar">Agregar este aviso de adopción</button>
+                <button type="button" id="enviar">Agregar este aviso de adopción</button>
             </div>
             <div id="confirmacion" style="display:none;">
-                <div class="ventana de confirmacion">
+                <div class="ventana-de-confirmacion">
                     <p >¿Está seguro que desea agregar este aviso de adopción?</p>
                     <div class="botones">
-                        <button type = "button" id="si">Sí, estoy seguro</button>
+                        <button type = "submit" id="si">Sí, estoy seguro</button>
                         <button type = "button" id="no">No, no estoy seguro, quiero volver al formulario</button>
                     </div>
                 </div>
@@ -132,7 +141,6 @@
     <div id="botonvolver" style="display: none;">
         <a href="{{url_for('portada')}}">Volver al inicio</a>
     </div>
-    <script src="{{ url_for('static', filename='js/region_comuna.js') }}"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     
 </main>

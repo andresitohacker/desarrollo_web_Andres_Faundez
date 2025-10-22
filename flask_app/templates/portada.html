@@ -33,13 +33,13 @@
         <tbody>
             {% for aviso in avisos %}
             <tr>
-                <td>{{ aviso.fecha_publicacion }}</td>
-                <td>{{ aviso.comuna }}</td>
+                <td>{{ aviso.fecha_ingreso }}</td>
+                <td>{{ aviso.comuna.nombre }}</td>
                 <td>{{ aviso.sector or 'Desconocido'}}</td>
-                <td>{{ aviso.cantidad }} {{ aviso.tipo }} {{ aviso.edad }}</td>
+                <td>{{ aviso.cantidad }} {{ aviso.tipo }} {{ aviso.edad }} {% if aviso.unidad_medida == 'a' %}años{% else %}meses{% endif %}</td>
                 <td>
                     {% if aviso.fotos %}
-                    <img src="{{ aviso.fotos[0] }}" alt="Foto de {{ aviso.tipo }}" width="100">
+                    <img src="{{ aviso.fotos[0].ruta_archivo }}" alt="Foto de {{ aviso.tipo }}" width="100">
                     {% endif %}
                 </td>
             </tr>

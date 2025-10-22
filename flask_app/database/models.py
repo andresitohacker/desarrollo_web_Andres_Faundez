@@ -41,31 +41,31 @@ class AvisoAdopcion(Base):
     nombre = Column(String(200), nullable=False)
     email = Column(String(100), nullable=False)
     celular = Column(String(12), nullable=False)
-    contactarPor = relationship("ContactarPor", back_populates="aviso")
-    tipo = Column(Enum('Perro', 'Gato'), nullable=False)
+    tipo = Column(Enum('perro', 'gato'), nullable=False)
     cantidad = Column(Integer, nullable=False)
     edad = Column(Integer, nullable=False)
-    unidad_medida = Column(Enum('Meses', 'Años'), nullable=False)
+    unidad_medida = Column(Enum('a', 'm'), nullable=False)
     fecha_entrega = Column(DateTime, nullable=False)
-    descripcion = Column(Text, nullable=True)
-    foto = relationship("Foto", back_populates="aviso")
+    descripcion = Column(Text)
+    fotos = relationship("Foto", back_populates="aviso")
     comuna = relationship("Comuna", back_populates="avisos")
+    contactarPor = relationship("ContactarPor", back_populates="aviso")
 
 class ContactarPor(Base):
     __tablename__ = 'contactar_por'
     id = Column(Integer, primary_key=True)
-    medio = Column(Enum('whatsapp', 'telegram','X','instragram','tiktok','otra'), nullable=True)
-    informacion = Column(String(500), nullable=True)
-    aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
+    nombre = Column(Enum('whatsapp', 'telegram','X','instagram','tiktok','otra'), nullable=True)
+    identificador = Column(String(150), nullable=True)
+    actividad_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
     aviso = relationship("AvisoAdopcion", back_populates="contactarPor")
 
 class Foto(Base):
     __tablename__ = 'foto'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    rutaimg = Column(String(255), nullable=False)
-    img = Column(String(255), nullable=False)  
-    aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
-    aviso = relationship("AvisoAdopcion", back_populates="foto")
+    ruta_archivo = Column(String(300), nullable=False)
+    nombre_archivo = Column(String(300), nullable=False)
+    actividad_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
+    aviso = relationship("AvisoAdopcion", back_populates="fotos")
 
 
     

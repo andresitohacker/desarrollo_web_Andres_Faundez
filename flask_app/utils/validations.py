@@ -17,10 +17,12 @@ def validar_email(email: str):
 def validar_telefono(telefono: str):
     if not telefono:
         return True
-    return bool(re.match(r"^\+?\d{7,15}$", telefono))
+    return bool(re.match(r"^\+\d{3}\.\d{8}$", telefono))
 
 def validar_tipo(tipo: str):   
-    return tipo in ['perro', 'gato']
+    if not tipo:
+        return False
+    return tipo.strip().lower() in ['perro', 'gato']
 
 def validar_entero(valor):
     if not valor or not valor.isdigit():
@@ -34,8 +36,17 @@ def validar_unidad_edad(unidad: str):
 def validar_fecha(fecha: str):
     if not fecha:
         return False
-    fecha = datetime.strptime(fecha, '%Y-%m-%d')
-    return fecha >= datetime.now()
+    dt = None
+    # 1) intentar datetime-local: YYYY-MM-DDTHH:MM
+    try:
+        dt = datetime.strptime(fecha, '%Y-%m-%dT%H:%M')
+    except ValueError:
+        # 2) fallback sólo fecha: YYYY-MM-DD
+        try:
+            dt = datetime.strptime(fecha, '%Y-%m-%d')
+        except ValueError:
+            return False
+    return dt >= datetime.now()
 
 def validar_texto(texto: str, length: int):
     if not texto:
@@ -67,15 +78,17 @@ def validar_imagen(archivo):
     return True
 
 def validar_contactar_por(metodo: str, id: str):
+
     medios_permitidos = ['whatsapp', 'telegram', 'X', 'instagram', 'tiktok', 'otra']
-    if not metodo:
+
+    if not metodo and not id:
         return True
-    
-    if metodo not in medios_permitidos:
+    if not metodo and not id:
         return False
-    if metodo and not id:
+    if metodo.lower() not in medios_permitidos:
         return False
-    return validar_texto(id, 100)
+    return 4 <= len(id) <=50
+
 
     
 
@@ -85,26 +98,32 @@ def validar_agregarAviso(form, files):
         errores.append("Nombre inválido")
     if not validar_email(form.get("email")):
         errores.append("Email inválido")
-    if not validar_telefono(form.get("telefono", '')):
-        errores.append("Teléfono inválido")
+    if not validar_telefono(form.get("celular", '')):
+        errores.append("Celular inválido")
     if not validar_tipo(form.get("tipo")):
         errores.append("Tipo inválido")
     if not validar_entero(form.get("cantidad")):
         errores.append("Cantidad inválida")
     if not validar_entero(form.get("edad")):
         errores.append("Edad inválida")
-    if not validar_unidad_edad(form.get("unidadMedidaEdad")):
+    if not validar_unidad_edad(form.get("unidad_medida")):
         errores.append("Unidad de edad inválida")
-    if not validar_fecha(form.get("FechaDisponibleEntrega")):
+    if not validar_fecha(form.get("fecha_entrega")):
         errores.append("Fecha de entrega inválida")
     if not validar_sector(form.get("sector", '')):
         errores.append("Sector inválido")
     if not validar_descripcion(form.get("descripcion", '')):
         errores.append("Descripción inválida")
-    if not validar_contactar_por(form.get("contactar_por", ''), form.get("id-contacto", '')):
-        errores.append("Método de contacto inválido")
 
-    fotos = files.getlist("fotos")
+    if form.getlist("contactar_por[]"):
+        medios = form.getlist("contactar_por[]")
+        id_contacto = form.getlist("id-contacto[]")
+
+        for par in zip(medios, id_contacto):
+            if not validar_contactar_por(par[0], par[1]):
+                errores.append("Método de contacto inválido")
+
+    fotos = files.getlist("foto")
     if not fotos or fotos == [None]:
         errores.append("Se requiere al menos una imagen")
     elif fotos:

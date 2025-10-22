@@ -16,7 +16,7 @@
             </ul>
         </nav>
     </header>
-    <main class=">container">
+    <main class="container">
         <section class="detalle-aviso">
             <h2>Información del Aviso</h2>
             <p><strong>Fecha de Publicación:</strong> {{ aviso.fecha_ingreso }}</p>
@@ -32,9 +32,21 @@
             <h2>Información de Contacto</h2>
             <p><strong>Nombre:</strong> {{ aviso.nombre }}</p>
             <p><strong>Email:</strong> {{ aviso.email }}</p>
-            <p><strong>Teléfono:</strong> {{ aviso.celular }}</p>
-            <p><strong>Contactar por:</strong> {{ aviso.contactar_por or 'No especificado' }}</p>
+            <p><strong>Teléfono:</strong> {{ aviso.celular or 'No especificado' }}</p>
+            <h3>Medios de Contacto Adicionales</h3>
+            {% if aviso.contactarPor and aviso.contactarPor|length > 0 %}
+            <div class="chips">
+                {% for c in aviso.contactarPor %}
+                  <span class="chip">
+                    <strong>{{ c.nombre }}</strong>{% if c.identificador %}: {{ c.identificador }}{% endif %}
+                  </span>
+                {% endfor %}
+              </div>
+            {% else %}
+              <p class="empty">Sin medios de contacto adicionales.</p>
+            {% endif %}
         </section>
+
 
         <section class="fotos-aviso">
             <h2>Fotos de la Mascota</h2>
@@ -44,3 +56,6 @@
                 {% endfor %}
             {% endif %}
         </section>
+    </main>
+</body>
+</html>

@@ -15,7 +15,7 @@ app.secret_key = "s3cr3t_k3y"
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
-@app.route("/")
+@app.route("/", endpoint="portada")
 def portada():
     avisos = db.get_avisos(5)
     return render_template("portada.html", avisos = avisos) #Recordar cambiar los templates
@@ -24,27 +24,28 @@ def portada():
 @app.route("/agregar", methods = ["GET","POST"])
 def agregar_aviso():
     if request.method == "POST":
-        print("🔍 DATOS DEL FORMULARIO:", dict(request.form))
-        print("📸 ARCHIVOS:", [f.filename for f in request.files.getlist('fotos')])
-        
-        valido, errores = validar_agregarAviso(request.form, request.files)
-        print("✅ VALIDACIÓN:", valido, errores)
-        
-        if valido:
-            try:
-                db.crear_aviso(request.form, request.files)
-                print("🎉 BASE DE DATOS - GUARDADO EXITOSO")
-                return redirect(url_for("portada"))
-            except Exception as e:
-                print("❌ ERROR EN BD:", str(e))
-                return f"ERROR: {str(e)}"
-        else:
-            regiones = db.get_regiones()
-            return render_template("agregar.html", errores=errores, regiones=regiones)
-        
-    elif request.method == "GET":
-        regiones = db.get_regiones()
-        return render_template("agregar.html", regiones=regiones)
+        valido,errores = validar_agregarAviso(request.form, request.files)
+        if not valido:
+           
+           regiones = db.get_regiones()
+           comunas = db.get_comunas()
+
+           return render_template("agregar.html", error = errores, regiones = db.get_regiones(), comunas = comunas, formData = request.form)
+
+        fotos = []
+        for f in request.files.getlist("foto"):
+            filename = secure_filename(f.filename)
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            f.save(filepath)
+            fotos.append(filename)
+
+        db.crear_aviso(request.form, fotos)
+        return redirect(url_for("portada"))
+    regiones = db.get_regiones()
+    comunas = db.get_comunas()
+    return render_template("agregar.html", regiones = regiones, comunas = comunas)
+
+
 
 @app.route("/listado")
 def listado():
@@ -53,7 +54,7 @@ def listado():
     total_Avisos = db.get_total_avisos()
     total_paginas = (total_Avisos+4)//5 
 
-    return render_template( "listado.html", avisos=avisos, pagina=pagina, total_paginas=total_paginas )
+    return render_template( "listado.html", avisos=avisos, pagina_actual=pagina, total_paginas=total_paginas )
 
     
 @app.route("/aviso/<int:aviso_id>")

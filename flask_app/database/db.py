@@ -1,4 +1,5 @@
 from database.models import *
+from sqlalchemy.orm import selectinload
 
 def get_regiones():
     session = SessionLocal()
@@ -6,15 +7,25 @@ def get_regiones():
     session.close()
     return region
 
-def get_comunas_by_region(region_id: int):
+def get_comunas():
     session = SessionLocal()
-    comunas = session.query(Comuna).filter(Comuna.region_id == region_id).all()
+    comunas = session.query(Comuna).all()
     session.close()
     return comunas
 
 def get_avisos(n, offset=0):
     session = SessionLocal()
-    avisos = session.query(AvisoAdopcion).order_by(AvisoAdopcion.fecha_ingreso.desc()).offset(offset).limit(n).all()
+    
+    avisos = session.query(AvisoAdopcion)\
+        .options(
+            selectinload(AvisoAdopcion.comuna), 
+            selectinload(AvisoAdopcion.fotos)           #Si no cargo las relaciones de esta forma me da error
+        )\
+        .order_by(AvisoAdopcion.fecha_ingreso.desc())\
+        .offset(offset)\
+        .limit(n)\
+        .all()
+        
     session.close()
     return avisos
 
@@ -30,10 +41,11 @@ def get_total_avisos():
 
 def get_aviso_por_id(aviso_id: int):
     session = SessionLocal()
-    aviso = session.query(AvisoAdopcion).filter(AvisoAdopcion.id == aviso_id).first()
-    if aviso:
-        fotos = aviso.fotos  # Acceder a la relación para cargar las fotos
-        contactar = aviso.contactarPor  # Acceder a la relación para cargar los métodos de contacto
+    aviso = session.query(AvisoAdopcion).options(
+        selectinload(AvisoAdopcion.fotos),
+        selectinload(AvisoAdopcion.contactarPor),
+        selectinload(AvisoAdopcion.comuna)
+    ).filter(AvisoAdopcion.id == aviso_id).first()
     session.close()
     return aviso
 
@@ -44,27 +56,30 @@ def crear_aviso(formulario, fotos):
         sector=formulario.get("sector",''),
         nombre=formulario["nombre"],
         email=formulario["email"],
-        celular=formulario.get("telefono", ''),
+        celular=formulario.get("celular", ''),
         tipo=formulario["tipo"].lower(),
         cantidad=int(formulario["cantidad"]),
         edad=int(formulario["edad"]),
-        unidad_medida='a' if formulario["unidadMedidaEdad"] == 'años' else 'm',
-        fecha_entrega=formulario["FechaDisponibleEntrega"],
+        unidad_medida='a' if formulario["unidad_medida"] == 'años' else 'm',
+        fecha_entrega=formulario["fecha_entrega"],
         descripcion=formulario.get("descripcion", '')
     )
     session.add(nuevo_aviso)
     session.flush()
 
-    if formulario.get("contactar_por"):
-        tipo_contacto = formulario["contactar_por"].lower()
-        if tipo_contacto == 'x':
-            tipo_contacto = 'X'     #De esta forma los datos tienen la forma que espera la bd
-        contacto = ContactarPor(
-            nombre=tipo_contacto,
-            identificador=formulario.get("id-contacto", ''),
+    medios = formulario.getlist("contactar_por[]")
+    id_contacto = formulario.getlist("id-contacto[]")
+    for medio, id in zip(medios, id_contacto):
+        if not medio:
+            continue
+        if medio.lower() == 'x':
+            medio = 'X'
+        nuevo_medio = ContactarPor(
+            nombre=medio,
+            identificador=id,
             actividad_id=nuevo_aviso.id
         )
-        session.add(contacto)
+        session.add(nuevo_medio)
 
     for foto in fotos:
         nueva_foto = Foto(

@@ -1,30 +1,4 @@
-const RegionesyComunas = () => {
-    const regiones = document.getElementById("region");
-    const comunas = document.getElementById("comuna");
 
-    regiones.innerHTML = '<option value="">Selecciona una región</option>';
-    comunas.innerHTML = '<option value="">Selecciona una comuna</option>';
-
-    region_comuna.regiones.forEach((region) => {
-        const opcion = document.createElement("option");
-        opcion.value = region.numero;
-        opcion.textContent = region.nombre;
-        regiones.appendChild(opcion);
-    });
-    regiones.addEventListener("change", () => {
-        if (regiones.value) {
-            const regionSeleccionada = region_comuna.regiones.find(region => region.numero == regiones.value);
-            if (regionSeleccionada) {
-                regionSeleccionada.comunas.forEach((comuna) => {
-                    const opcion = document.createElement("option");
-                    opcion.value = comuna.id;
-                    opcion.textContent = comuna.nombre;
-                    comunas.appendChild(opcion);
-                });
-            }
-        }
-    });
-};
 
 const agregarFotos = () => {
     const fotos = document.getElementById("fotos");
@@ -45,47 +19,56 @@ const agregarFotos = () => {
     });
 };
 
+
+const contactoPor = () => {
+  const container = document.getElementById("contactos");
+  const botonAgregarContacto = document.getElementById("agregar-contacto");
+
+  // Función para ocultar/mostrar info-contacto
+  const Ocultar = (item) => {
+    const select = item.querySelector(".contactar_por");
+    const info = item.querySelector(".info-contacto");
+
+    select.addEventListener("change", () => {
+      info.style.display = select.value ? "block" : "none";
+    });
+    info.style.display = select.value ? "block" : "none";
+  };
+  container.querySelectorAll(".contacto-item").forEach(Ocultar);
+
+  botonAgregarContacto.addEventListener("click", () => {
+    const contactosActuales = container.querySelectorAll(".contacto-item").length;
+    
+    if (contactosActuales < 5) {
+      const base = container.querySelector(".contacto-item");
+      const nuevo = base.cloneNode(true);
+
+      const sel = nuevo.querySelector(".contactar_por");
+      const info = nuevo.querySelector(".info-contacto");
+      const input = nuevo.querySelector('input[name="id-contacto[]"]');
+
+      if (sel) sel.value = "";
+      if (input) input.value = "";
+      if (info) info.style.display = "none";
+
+      container.appendChild(nuevo);
+      Ocultar(nuevo);
+
+   
+      if (container.querySelectorAll(".contacto-item").length === 5) {
+        botonAgregarContacto.disabled = true;
+      }
+    }
+  });
+};
+
+
 const prellenadoFecha = () => { 
     const fechaInput = document.getElementById("FechaDisponibleEntrega");
     const fechaActual = new Date();
     fechaActual.setHours(fechaActual.getHours() -1); // Sumar 3 horas a la fecha actual, acá aparece como resta pero es porque el toISOString lo convierte a UTC y Chile es UTC-4
     fechaInput.value = fechaActual.toISOString().slice(0, 16);
 };
-
-let contactoPorInput = document.getElementById('contactar_por');
-let infoContactoInput = document.getElementById('info-contacto');
-//Forma de que aparezca el input de id-contacto
-contactoPorInput.addEventListener("change", () => {
-        if (contactoPorInput.value) {
-            infoContactoInput.style.display = "block";
-        } else {
-            infoContactoInput.style.display = "none";
-        }
-    });
-
-const ventanaConfirmacion = document.getElementById("confirmacion");
-const botonSi = document.getElementById("si");
-const botonNo = document.getElementById("no");
-const botonVolver = document.getElementById("botonvolver");
-const formulario = document.getElementById("form-container");
-
-const confirmacion = () => {
-    ventanaConfirmacion.style.display = "block";
-};
-const ocultarConfirmacion = () => {
-    ventanaConfirmacion.style.display = "none";
-};
-
-const enviarFormulario = () => {
-    ocultarConfirmacion();
-    alert("Aviso de adopción enviado con éxito.");
-    formulario.style.display = "none";
-    botonVolver.style.display = "block";
-    
-}
-
-botonSi.addEventListener("click", enviarFormulario);
-botonNo.addEventListener("click", ocultarConfirmacion);
 
 const validarFormulario = () => {
 
@@ -111,7 +94,7 @@ const validarFormulario = () => {
     let edadInput = document.getElementById('edad');
     let unidadEdadInput = document.getElementById('unidadMedidaEdad');
     let fechaInput = document.getElementById('FechaDisponibleEntrega');
-    let descripcionInput = document.getElementById('descripcion');
+
 
 
     if (!regionInput.value) {
@@ -145,11 +128,25 @@ const validarFormulario = () => {
         }
     }
 
-    if (contactoPorInput.value) {
-        if (infoContactoInput.value &&!validarTexto(infoContactoInput.value, 5, 50)) {
-            error.push("El ID de contacto debe tener entre 5 y 50 caracteres.");
+    const contactos = document.querySelectorAll('.contacto-item');
+    let numContactos = 0;
+
+    contactos.forEach((contacto) => {
+        const metodo = contacto.querySelector('.contactar_por');
+        const idContacto = contacto.querySelector('.id-contacto');
+
+        if (metodo.value) {
+            numContactos += 1;
+            if (!idContacto.value || !validarTexto(idContacto.value, 4, 50)) {
+                error.push("El ID de contacto o URL debe tener entre 4 y 50 caracteres.");
+            }
         }
+    });
+
+    if( numContactos >5 ) {
+        error.push("No puede agregar más de 5 métodos de contacto.");
     }
+
     if (!tipoInput.value) {
         error.push("Debe seleccionar una opción.");
     }
@@ -206,20 +203,39 @@ const validarFormulario = () => {
     if (error.length > 0) {
         alert(error.join("\n"));
         return false;
-    }else {
-        confirmacion();
     }
+    return true;
 };
 
 
 
 
-let submit = document.getElementById("enviar");
 
+contactoPor()
 prellenadoFecha()
 agregarFotos()
-RegionesyComunas()
-// if (submit) {
-//     submit.addEventListener("click", validarFormulario);
-// }
 
+const confirmacion = document.getElementById("confirmacion");
+const botonSi = document.getElementById("si");
+const botonNo = document.getElementById("no");
+const botonEnviar = document.getElementById("enviar");
+
+
+botonEnviar.addEventListener("click", () => {
+    confirmacion.style.display = "block";
+});
+
+botonNo.addEventListener("click", () => {
+    confirmacion.style.display = "none";
+});
+
+botonSi.addEventListener("click", (e) => {
+    const ok = validarFormulario(); 
+    if (ok === false) {
+      e.preventDefault();
+      confirmacion.style.display = "none";           
+    }
+    else {
+      confirmacion.style.display = "none";
+    }
+  });
