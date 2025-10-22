@@ -50,6 +50,7 @@ class AvisoAdopcion(Base):
     fotos = relationship("Foto", back_populates="aviso")
     comuna = relationship("Comuna", back_populates="avisos")
     contactarPor = relationship("ContactarPor", back_populates="aviso")
+    comentarios = relationship("Comentario", back_populates="aviso")
 
 class ContactarPor(Base):
     __tablename__ = 'contactar_por'
@@ -68,4 +69,11 @@ class Foto(Base):
     aviso = relationship("AvisoAdopcion", back_populates="fotos")
 
 
-    
+class Comentario(Base):
+    __tablename__ = 'comentario'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    nombre = Column(String(80), nullable = False)
+    texto = Column(String(300), nullable=False)
+    fecha    = Column(DateTime, nullable=False, default=datetime.datetime.now)  #Recordar hacer el cambio a UTC-3 al usar funciones
+    aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
+    aviso = relationship("AvisoAdopcion", back_populates="comentarios")
