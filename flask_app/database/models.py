@@ -74,6 +74,6 @@ class Comentario(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     nombre = Column(String(80), nullable = False)
     texto = Column(String(300), nullable=False)
-    fecha    = Column(DateTime, nullable=False, default=datetime.datetime.now)  #Recordar hacer el cambio a UTC-3 al usar funciones
+    fecha    = Column(DateTime, nullable=False, default=datetime.now)  #Recordar hacer el cambio a UTC-3 al usar funciones
     aviso_id = Column(Integer, ForeignKey('aviso_adopcion.id'), nullable=False)
     aviso = relationship("AvisoAdopcion", back_populates="comentarios")

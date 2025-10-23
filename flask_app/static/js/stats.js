@@ -39,12 +39,12 @@ const A_porDia = (points) => {
 fetch("http://127.0.0.1:5000/avisos_por_dia")
     .then((response)=> response.json())
     .then((data) => {
-        const points = data.map(({date, count}) => {
-            const [year, month, day] = date
+        const points = data.map(({fecha, total}) => {
+            const [year, month, day] = fecha
                 .split("-")
                 .map((part) => parseInt(part, 10));
             return [
-                Date.UTC(year, month - 1, day), count
+                Date.UTC(year, month - 1, day), total
             ];
         });
         A_porDia(points);
@@ -74,7 +74,7 @@ fetch("http://127.0.0.1:5000/avisos_por_tipo")
     .catch(console.error);
 
 
-const  A_porMes = () => {
+const  A_porMes = (meses, perroMes, gatoMes) => {
     Highcharts.chart('container3',{
         chart: {
             type: 'column'
@@ -83,7 +83,30 @@ const  A_porMes = () => {
             text: 'perros vs gatos por mes'
         },
         xAxis: {
-            
-        } 
+            categories: meses,
+            title: {
+                text :"Meses"
+            }
+        },
+        yAxis: {
+            title:{
+                text:"Cantidad"
+            }
+        },
+        series:[
+            {name: "Perros", data: perroMes},
+            {name: "Gatos", data: gatoMes},
+        ],
+    });
+};
+
+
+fetch("http://127.0.0.1:5000/avisos_por_mes")
+    .then((response)=> response.json())
+    .then((datos)=>{
+        const meses = datos.map(response => response.mes);
+        const perroMes = datos.map(response => response.perro);
+        const gatoMes = datos.map(response => response.gato);
+        A_porMes(meses,perroMes,gatoMes)
     })
-}
+    .catch(console.error);

@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, session
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 from utils.validations import *
 from database import db as db
 from werkzeug.utils import secure_filename
@@ -64,6 +64,24 @@ def detalle_aviso(aviso_id):
         return False, "Aviso no encontrado"
     return render_template("detalle.html", aviso=aviso)
 
+@app.route("/estadisticas")
+def estadisticas():
+    return render_template("estadisticas.html")
+
+@app.route("/avisos_por_dia")
+def avisos_por_dia():
+    datos = db.avisosPorDia()
+    return jsonify(datos)
+
+@app.route("/avisos_por_tipo")
+def avisos_por_tipo():
+    datos = db.avisosPorTipo()
+    return jsonify(datos)
+
+@app.route("/avisos_por_mes")
+def avisos_por_mes():
+    datos= db.avisosPorMes()
+    return jsonify(datos)
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -1,5 +1,6 @@
 from database.models import *
 from sqlalchemy.orm import selectinload
+from sqlalchemy import func
 
 def get_regiones():
     session = SessionLocal()
@@ -92,3 +93,54 @@ def crear_aviso(formulario, fotos):
     session.commit()
     session.close()
     return nuevo_aviso
+
+def avisosPorDia():
+    session = SessionLocal()
+    data = (session.query(func.date(AvisoAdopcion.fecha_ingreso).label("fecha"),
+                         func.count(AvisoAdopcion.id).label("total"),
+                         )
+                        .group_by("fecha")
+                        .order_by("fecha")
+                        .all()
+                        )
+    final = [{"fecha": str(i.fecha), "total": int(i.total)} for i in data]
+    session.close()
+    return final
+
+def avisosPorTipo():
+    session = SessionLocal()
+    data = (session.query(AvisoAdopcion.tipo, func.count(AvisoAdopcion.id))
+            .group_by(AvisoAdopcion.tipo)
+            .all()
+    )
+    conteo_perro = 0
+    conteo_gato = 0
+    for tipo, cantidad in data:
+        if tipo == "perro":
+            conteo_perro = cantidad
+        elif tipo =="gato":
+            conteo_gato = cantidad
+    final = {"perro": conteo_perro, "gato": conteo_gato }
+    session.close()
+    return final
+
+def avisosPorMes():
+    session = SessionLocal()
+    data = (session.query(
+                func.date_format( AvisoAdopcion.fecha_ingreso, "%Y-%m").label("mes"),
+                AvisoAdopcion.tipo,
+                func.count(AvisoAdopcion.id).label("total"),
+            )
+            .group_by("mes",AvisoAdopcion.tipo)
+            .order_by("mes")
+            .all()
+            )
+    final = {}
+    for mes, tipo, total in data:
+        if mes not in final:
+            final[mes] = {"mes": mes, "gato": 0, "perro": 0}
+        if tipo in ("perro","gato"):
+            final[mes][tipo] = int(total)
+    session.close()
+    return sorted(final.values(), key=lambda x: x["mes"])
+
