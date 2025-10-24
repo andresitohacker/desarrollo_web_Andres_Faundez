@@ -144,3 +144,25 @@ def avisosPorMes():
     session.close()
     return sorted(final.values(), key=lambda x: x["mes"])
 
+def get_comentarios(aviso_id):
+    session = SessionLocal()
+    data = (session.query(Comentario).filter(Comentario.aviso_id == aviso_id)
+            .order_by(Comentario.fecha.desc())
+            .all()
+            )
+    final =[ {"fecha": i.fecha.strftime("%Y-%m-%d %H:%M"), "nombre": i.nombre, "texto": i.texto,} for i in data]
+    session.close()
+    return final
+
+def crear_Comentario(form, aviso_id):
+    session = SessionLocal()
+    nuevoComentario = Comentario(
+        aviso_id = aviso_id,
+        nombre = form.get("nombre"),
+        texto = form.get("texto"),
+        fecha = datetime.now()
+    )
+    session.add(nuevoComentario)
+    session.commit()
+    session.close()
+    return nuevoComentario

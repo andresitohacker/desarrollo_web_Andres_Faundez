@@ -62,7 +62,8 @@ def detalle_aviso(aviso_id):
     aviso = db.get_aviso_por_id(aviso_id)
     if aviso is None:
         return False, "Aviso no encontrado"
-    return render_template("detalle.html", aviso=aviso)
+    comentarios = db.get_comentarios(aviso_id)
+    return render_template("detalle.html", aviso=aviso,comentarios=comentarios)
 
 @app.route("/estadisticas")
 def estadisticas():
@@ -82,6 +83,18 @@ def avisos_por_tipo():
 def avisos_por_mes():
     datos= db.avisosPorMes()
     return jsonify(datos)
+
+
+@app.route("/aviso/<int:aviso_id>/comentar", methods = ["POST"])
+def comentar(aviso_id):
+    ok, errores = validarComentarios(request.form)
+    if not ok:
+        aviso = db.get_aviso_por_id(aviso_id)
+        comentarios = db.get_comentarios(aviso_id)
+        return render_template("detalle.html",aviso = aviso, comentarios=comentarios, formCom = request.form, com_error = errores)
+    nuevoCom = db.crear_Comentario(request.form, aviso_id)
+    return redirect(url_for("detalle_aviso", aviso_id=aviso_id))
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

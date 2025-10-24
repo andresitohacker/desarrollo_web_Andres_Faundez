@@ -133,3 +133,22 @@ def validar_agregarAviso(form, files):
     
     return len(errores) == 0, errores
 
+
+
+def validarNombreCom(nombre:str):
+    if not nombre or len(nombre.strip())<3 or len(nombre.strip())>80:
+        return False
+    return bool(re.match(r"^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$", nombre.strip()))
+def validarCom(texto:str):
+    if not texto or len(texto.strip()) <5 or len(texto.strip())> 300:
+        return False
+    return bool(re.match(r"^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$", texto.strip()))
+
+def validarComentarios(form):
+    errores = []
+    if not validarNombreCom(form.get("nombre")):
+        errores.append("Nombre no valido")
+    if not validarCom(form.get("texto")):
+        errores.append("comentario no valido")
+    
+    return len(errores)==0, errores

@@ -56,6 +56,49 @@
                 {% endfor %}
             {% endif %}
         </section>
+
+
+        <section class = "listado-comentarios">
+            <h2>Comentarios</h2>
+            {%if comentarios%}
+                <ul>
+                    {%for com in comentarios %}
+                    <li>
+                          <strong>{{ com.nombre }}</strong>-{{com.fecha}}<br>
+                          {{com.texto}}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </section>
+
+
+        <section class = "comentarios-aviso" >
+            <h2>Agregar Comentarios</h2>
+        
+
+            {% if com_error %}
+                <div class="error-message">
+                <ul>
+                    {% for e in com_error %}
+                    <li>{{ e }}</li>
+                    {% endfor %}
+                </ul>
+                </div>
+            {% endif %}   
+            <form id = "form-comentarios" method = "POST" action="{{ url_for('comentar', aviso_id=aviso.id) }}">
+                <div id = "grupo-input" >
+                    <label for = "com-nombre">Nombre</label>
+                    <input id = "com-nombre"  name = "nombre" type = "text" value="{{ (formCom.get('nombre') if formCom else '') }}" />
+                </div>
+                <div class = "grupo-input">
+                    <label for = "comentario">Comentario</label>
+                    <textarea id = "comentario" name = "texto" rows = "4" cols="50">{{ (formCom.get('texto') if formCom else '') }}</textarea>
+                </div>
+                <button id ="enviar-com" type = "submit">Agregar comentario</button>
+            </form>
+        </section>
+        <script src="{{ url_for('static', filename='js/comentarios.js') }}"></script>
     </main>
 </body>
 </html>
