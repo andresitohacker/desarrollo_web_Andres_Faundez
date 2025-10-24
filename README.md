@@ -1,0 +1,7 @@
+En lo que respecta a el uso xhr o fetch me incliné completamente con el uso de fetech pues lo consideraba muhco mas intuitivo y sencillo de ocupar, luego en la parte de comentarios volví a trabajar con js pues me siento mas comodo al trabajar en ese ambiente
+Mi codigo tiene bastante inspiración en lo qu efueron los últimos dos auxs (7 y 8) pues me ayudaba a entender que hacía.
+Estuve haciendo un monton de commits desde la tarea 2 que corregí e hice bien pues me sentía bastante avergonzado de lo precario de la entrega que hice. 
+Finalmente comentar que durante el trabajo estuve poblando la base con datos malos e imagenes cualqesquiera que tenía en el pc, pero lo borré todo y por temas de practicidad le pedí a la ia que poblara con las imagenes que tenía en el uploads, pero esto
+fue luego de tener completamente asegurado que todo mi codigo funcionaba de manera correcta y pudiera poblar la base con el mismo. 
+Insto a seguir poblando la base para confirmar funcionalidad y destacar que la expresión regular que usé para los textos no permite caracteres que no sean letras lo cual podria generar un problema a futuro en epecial en lo que respecta al uso de comas y signos de pregunta.
+Pensé en hacer que el formulario de agregar tuviese la opción de mantener las selecciones luego de tener un error en la validación pero me di cuenta que tenía que cambiar demasiadas lineas por lo cual queda pospuesto para alguna entrega siguiente.
