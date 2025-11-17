@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Avisos de Adopción</title>
+        <link rel="stylesheet" th:href="@{/css/avisos.css}">
+    </head>
+    <body>
+        <h1>Listado de Avisos</h1>
+        <table id="listado">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Fecha Publicación</th>
+                    <th>Sector</th>
+                    <th>Cantidad Tipo Edad</th>
+                    <th>Comuna</th>
+                    <th>nota</th>
+                    <th>Evaluar</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="aviso : ${avisos}">
+                    <td th:text="${aviso['id']}"></td>
+                    <td th:text="${aviso['fecha_publicacion']}"></td>
+                    <td th:text="${aviso['sector']}"></td>
+                    <td th:text="${aviso['cantidad']} + ' ' + ${aviso['tipo']} + ' ' + ${aviso['edad']} + ' ' + (${aviso['unidad_medida'] == 'm'} ? 'meses' : 'años')"></td>        
+                    <td th:text="${aviso['comuna']}"></td>
+                    <td th:text="${aviso['nota']}"></td>
+                    <td>
+                        <button class = "evaluar" th:attr="data-id=${aviso['id']}">Evaluar</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <script th:src="@{/js/avisos.js}"></script> 
+    </body>
+</html>
